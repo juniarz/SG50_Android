@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF">
+    <TextView
+        android:text="Title:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TV_TITLE"
+        android:gravity="left"
+        android:textSize="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FF0000" />
+    <TextView
+        android:text="Uploaded by:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TV_POSTED"
+        android:textColor="#FF0000"
+        android:textSize="12dp" />
+    <RelativeLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout1">
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="250px"
+            android:id="@+id/VideoView1" />
+        <Button
+            android:text="Play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/relativeLayout1"
+            android:id="@+id/button1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/VideoView1"
+        android:id="@+id/linearLayout1">
+        <Button
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/BTN_LIKE"
+            android:text="♥"
+            android:background="@android:color/transparent"
+            android:textSize="@android:dimen/app_icon_size"
+            android:textColor="@android:color/darker_gray" />
+        <TextView
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/TV_LIKES"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@android:color/background_dark" />
+    </LinearLayout>
+</LinearLayout>
