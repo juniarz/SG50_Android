@@ -24,45 +24,10 @@ namespace SG50
             public String Result = "";
         }
 
-        public delegate void APIEventHandler(object sender, APIEventHandlerArgs e);
-        public event APIEventHandler OnErrorEventHandler;
-        public event APIEventHandler OnSuccessEventHandler;
-
-        protected void OnError(object sender, APIEventHandlerArgs e)
-        {
-            if (OnErrorEventHandler != null)
-            {
-                // Call the Event
-                OnErrorEventHandler(this, e);
-            }
-        }
-
-        protected void OnSuccess(object sender, APIEventHandlerArgs e)
-        {
-            if (OnSuccessEventHandler != null)
-            {
-                // Call the Event
-                OnSuccessEventHandler(this, e);
-            }
-        }
-
-        public void Call(APIArgs args)
+        public IRestResponse Call(APIArgs args)
         {
             var client = new RestClient(API_TEMPLATE);
-
-            var request = GetRequest(args);
-
-            client.ExecuteAsync(request, response =>
-            {
-                if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    OnError(this, new APIEventHandlerArgs { ErrorMessage = response.Content });
-                }
-                else
-                {
-                    OnSuccess(this, new APIEventHandlerArgs { Result = response.Content });
-                }
-            });
+            return client.Execute(GetRequest(args));
         }
 
         public Task<IRestResponse> CallAsync(APIArgs args)
@@ -87,9 +52,16 @@ namespace SG50
         {
             var request = new RestRequest(String.Format("{0}/?{1}", API, Guid.NewGuid().ToString().Replace("-", "")), Method.POST);
 
+
+
             foreach (String key in args.Headers.Keys)
             {
                 request.AddHeader(key, args.Headers[key].ToString());
+            }
+
+            if (true)
+            {
+                request.AddParameter("accesstoken", "f3f82d07dad109d74a1229f8a79c49e7");
             }
 
             foreach (String key in args.Parameters.Keys)

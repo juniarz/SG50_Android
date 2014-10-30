@@ -22,7 +22,7 @@ namespace SG50
 
         List<JObject> items;
         Activity context;
-        
+
 
         public CustomFeedsAdapter(Activity context, List<JObject> items)
             : base()
@@ -46,13 +46,13 @@ namespace SG50
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             MyViewHolder holder = null;
-
+            int likes;
             View view = convertView; // re-use an existing view, if one is supplied
 
             if (view != null)
             {
                 holder = view.Tag as MyViewHolder;
-                
+
             }
             if (holder == null)
             {
@@ -65,21 +65,33 @@ namespace SG50
                 view.Tag = holder;
             }
             holder.Title.Text = items[position]["title"].ToString();
-            holder.User.Text = "Uploaded by: "+items[position]["user"].ToString();
-            holder.Likes.Text = items[position]["likes"].ToString() + " Likes";
+            holder.User.Text = "Uploaded by: " + items[position]["user"].ToString();
+            likes = int.Parse(items[position]["likes"].ToString());
+            holder.Likes.Text = likes.ToString() + " Likes";
             var uri = Android.Net.Uri.Parse(items[position]["video"]["url"].ToString());
             holder.Video.SetVideoURI(uri);
 
-           /* VideoView videoView = view.FindViewById<VideoView>(Resource.Id.VideoView1);
-            view.FindViewById<TextView>(Resource.Id.TV_TITLE).Text = items[position]["title"].ToString();
-            view.FindViewById<TextView>(Resource.Id.TV_POSTED).Text = items[position]["user"].ToString();
-            view.FindViewById<TextView>(Resource.Id.TV_LIKES).Text = items[position]["likes"].ToString() + " Likes";
-            Console.WriteLine(items[position]["video"]["url"].ToString());
-            var uri = Android.Net.Uri.Parse(items[position]["video"]["url"].ToString());
-            videoView.SetVideoURI(uri);*/
+            /* VideoView videoView = view.FindViewById<VideoView>(Resource.Id.VideoView1);
+             view.FindViewById<TextView>(Resource.Id.TV_TITLE).Text = items[position]["title"].ToString();
+             view.FindViewById<TextView>(Resource.Id.TV_POSTED).Text = items[position]["user"].ToString();
+             view.FindViewById<TextView>(Resource.Id.TV_LIKES).Text = items[position]["likes"].ToString() + " Likes";
+             Console.WriteLine(items[position]["video"]["url"].ToString());
+             var uri = Android.Net.Uri.Parse(items[position]["video"]["url"].ToString());
+             videoView.SetVideoURI(uri);*/
 
             Button btn = view.FindViewById<Button>(Resource.Id.button1);
+            var liked = items[position]["liked"].ToString();
             Button LikeVideo = view.FindViewById<Button>(Resource.Id.BTN_LIKE);
+            if (Convert.ToBoolean(liked) == true)
+            {
+                LikeVideo.SetTextColor(Android.Graphics.Color.Red);
+                
+            }
+            else
+            {
+                LikeVideo.SetTextColor(Android.Graphics.Color.DarkGray);
+            }
+            Button FlagVideo = view.FindViewById<Button>(Resource.Id.BTN_FLAG);
             btn.Click += (o, e) =>
             {
                 btn.Visibility = ViewStates.Gone;
@@ -90,55 +102,96 @@ namespace SG50
                 mc.RequestFocus();
 
             };
-            LikeVideo.Click += async (o, e) =>
+            LikeVideo.Click += (o, e) =>
             {
-                var liked = items[position]["liked"].ToString();
-                Console.WriteLine("Before:" +items[position]["liked"].ToString());
+                
                 if (Convert.ToBoolean(liked))
                 {
-                    APITask task = new APITask("/feed/:" + items[position]["present_id"] + "/unlike");
+                    APITask task = new APITask("feed/" + items[position]["present_id"] + "/unlike");
                     APIArgs args = new APIArgs();
-                    args.Parameters.Add("accesstoken", "acdcb58208f767fc204f36ecd74afc30");
-                    IRestResponse response = await task.CallAsync(args);
+                    IRestResponse response = task.Call(args);
 
                     if (response.ErrorException == null)
                     {
                         context.RunOnUiThread(() =>
                         {
-                            int likes = Convert.ToInt32(items[position]["likes"]);
-                            items[position]["likes"] = likes - 1;
-                            Console.WriteLine("After:" + items[position]["liked"].ToString());
+                            LikeVideo.SetTextColor(Android.Graphics.Color.DarkGray);
+                            likes -= 1;
+                            holder.Likes.Text = likes.ToString() + " Likes";
+                            items[position]["liked"] = false;
+                            liked = items[position]["liked"].ToString();
+                            Console.WriteLine("Status:" +items[position]["liked"].ToString() + "Likes:"+items[position]["likes"].ToString());
                         });
                     }
                     else
                     {
                         Console.WriteLine(response.ErrorException.Message);
-                        Console.WriteLine("After:" + items[position]["liked"].ToString());
                     }
                 }
                 else
                 {
-                    APITask task = new APITask("/feed/:" + items[position]["present_id"] + "/like");
+                    APITask task = new APITask("feed/" + items[position]["present_id"] + "/like");
                     APIArgs args = new APIArgs();
-                    args.Parameters.Add("accesstoken", "acdcb58208f767fc204f36ecd74afc30");
-                    IRestResponse response = await task.CallAsync(args);
+                    IRestResponse response = task.Call(args);
 
                     if (response.ErrorException == null)
                     {
                         context.RunOnUiThread(() =>
                         {
-                            Console.WriteLine("After:" + items[position]["liked"].ToString());
+                            LikeVideo.SetTextColor(Android.Graphics.Color.Red);
+                            likes += 1;
+                            holder.Likes.Text = likes.ToString() + " Likes";
+                            items[position]["liked"] = true;
+                            liked = items[position]["liked"].ToString();
+                            Console.WriteLine("Status:" +items[position]["liked"].ToString() + "Likes:"+items[position]["likes"].ToString());
                         });
                     }
                     else
                     {
                         Console.WriteLine(response.ErrorException.Message);
-                        Console.WriteLine("After:" + items[position]["liked"].ToString());
+
                     }
                 }
-            };
+            }; 
 
-               return view;           
+            FlagVideo.Click += (o, e) =>
+            {
+                Android.App.AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                AlertDialog alertDialog = builder.Create();
+                alertDialog.SetTitle("Are you sure?");
+                alertDialog.SetIcon(Resource.Drawable.Icon);
+                alertDialog.SetMessage("Flag as inappropriate?");
+
+                //YES
+                alertDialog.SetButton("YES", (s, ev) =>
+                {
+                    APITask task = new APITask("feed/" + items[position]["present_id"] + "/flag");
+                    APIArgs args = new APIArgs();
+                    IRestResponse response = task.Call(args);
+
+                    if (response.ErrorException == null)
+                   { 
+                        context.RunOnUiThread(() =>
+                        {
+                            Console.WriteLine("Flag:");
+                        });
+                    }
+                    else
+                    {
+                        Console.WriteLine(response.ErrorException.Message);
+                    }
+                });
+                
+                //NO
+                alertDialog.SetButton2("NO", (s, ev) =>
+                {
+                    alertDialog.Dispose();
+                });
+
+                alertDialog.Show();
+            };
+            
+            return view;
         }
 
     }

@@ -23,7 +23,7 @@ namespace SG50
     [Activity(Label = "SG50", MainLauncher = true)]
     public class MainActivity : Activity
     {
-        protected async override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
@@ -32,16 +32,19 @@ namespace SG50
 
             ListView listView = FindViewById<ListView>(Resource.Id.listView1);
 
-            APITask task = new APITask("/feed");
+            APITask task = new APITask("feed");
 
             APIArgs args = new APIArgs();
-            args.Parameters.Add("accesstoken", "acdcb58208f767fc204f36ecd74afc30");
+            args.Parameters.Add("page", "0");
+            args.Parameters.Add("type", "test");
 
-            IRestResponse response = await task.CallAsync(args);
+            IRestResponse response = task.Call(args);
              
             if (response.ErrorException == null)
             {
                 List<JObject> items = new List<JObject>();
+
+                Console.WriteLine("Res: " + response.Content);
                 var data = JObject.Parse(response.Content);
 
                 foreach (JObject obj in data.Values())

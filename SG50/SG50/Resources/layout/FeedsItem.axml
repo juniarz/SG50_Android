@@ -55,14 +55,30 @@
             android:id="@+id/BTN_LIKE"
             android:text="♥"
             android:background="@android:color/transparent"
-            android:textSize="@android:dimen/app_icon_size"
-            android:textColor="@android:color/darker_gray" />
+            android:textSize="@android:dimen/app_icon_size" />
         <TextView
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/TV_LIKES"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@android:color/background_dark" />
+        <Button
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/BTN_FLAG"
+            android:text="♚"
+            android:background="@android:color/transparent"
+            android:textSize="@android:dimen/app_icon_size" />
+        <TextView
+            android:text="Flag"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/TV_FLAG"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@android:color/background_dark" />
