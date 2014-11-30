@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    android:minWidth="25px"
+    android:minHeight="25px">
+    <LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/MainContainer">
+        <ImageView
+            android:src="@drawable/logo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/logo"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1" />
+        <ViewFlipper
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ViewSwitcher"
+            android:layout_weight="1">
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/NRICPLACEHOLDER"
+                android:gravity="center">
+                <TextView
+                    android:text="NRIC:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TV_NRIC"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <TextView
+                    android:text="(e.g. S1234567A)"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView1"
+                    android:gravity="center"
+                    android:textColor="@android:color/black" />
+                <EditText
+                    android:inputType="text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_NRIC"
+                    android:maxLength="9"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+                <TextView
+                    android:text="Continue"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/BTN_Continue1"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/HANDPHONEPLACERHOLDER"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TV_HP"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center"
+                    android:text="Mobile" />
+                <EditText
+                    android:inputType="phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_phone"
+                    android:maxLength="8"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+                <TextView
+                    android:text="Continue"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/BTN_Continue2"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/EMAILLACEHOLDER"
+                android:gravity="center">
+                <TextView
+                    android:text="Email:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TV_EMAIL"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <EditText
+                    android:inputType="textEmailAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_email"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+                <TextView
+                    android:text="Continue"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/BTN_Continue3"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/USERNAMEPLACEHOLDER"
+                android:gravity="center">
+                <TextView
+                    android:text="Name:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TV_username"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <EditText
+                    android:inputType="textPersonName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_name"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+                <TextView
+                    android:text="Continue"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/BTN_Continue4"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/PASSWORDPLACEHOLDER"
+                android:gravity="center">
+                <TextView
+                    android:text="Password:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TV_password"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <EditText
+                    android:inputType="textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_password"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+                <TextView
+                    android:text="Re-enter Password:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TV_password"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <EditText
+                    android:inputType="textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_repassword"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+                <TextView
+                    android:text="Continue"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/BTN_Continue5"
+                    android:textColor="@android:color/black"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/ConfirmMessage"
+                android:gravity="center">
+                <TextView
+                    android:text="You're almost done!"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TV_dob"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <TextView
+                    android:text="Submit"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/BTN_Continue6"
+                    android:textColor="@android:color/black"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+        </ViewFlipper>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/view1" />
+    </LinearLayout>
+</LinearLayout>

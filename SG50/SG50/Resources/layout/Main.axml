@@ -3,30 +3,36 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/linearLayout1">
+    android:id="@+id/maincontent">
+    <GridView
+        android:minWidth="25px"
+        android:minHeight="200px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/GridHolder"
+        android:layout_above="@+id/menubar"
+        android:layout_weight="1" />
     <LinearLayout
         android:orientation="horizontal"
         android:minWidth="25px"
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout2">
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="100px"
-            android:id="@+id/view1"
+        android:id="@+id/menubar"
+        android:background="@android:color/white">
+        <ImageButton
+            android:src="@drawable/Logo"
+            android:id="@+id/btnCamera"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
             android:background="@android:color/white" />
     </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:id="@+id/view2"
-        android:background="#FF0000" />
-    <ListView
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:id="@+id/listView1" />
 </LinearLayout>

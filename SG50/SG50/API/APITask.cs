@@ -5,68 +5,89 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using RestSharp;
+using Android.Content;
+using Java.IO;
 
 namespace SG50
 {
     class APITask
     {
         public String API = "";
-        public static String API_TEMPLATE = "http://sg50-private-api.herokuapp.com/api/";
+        public static String API_TEMPLATE = "http://sg50-private-api.herokuapp.com";
+        public delegate void SuccessDelegate(IRestResponse response);
+        public delegate void ErrorDelegate(IRestResponse response);
 
         public APITask(String API)
         {
             this.API = API;
         }
 
-        public class APIEventHandlerArgs : EventArgs
-        {
-            public String ErrorMessage = "";
-            public String Result = "";
-        }
-
-        public IRestResponse Call(APIArgs args)
+        public IRestResponse Call(APIArgs args, Method method = Method.POST)
         {
             var client = new RestClient(API_TEMPLATE);
-            return client.Execute(GetRequest(args));
+            return client.Execute(GetRequest(args, method));
         }
 
-        public Task<IRestResponse> CallAsync(APIArgs args)
+        public void CallAsync(APIArgs args, SuccessDelegate OnSuccess, ErrorDelegate OnError, Method method = Method.POST)
         {
             var client = new RestClient(API_TEMPLATE);
-
-            var request = GetRequest(args);
-
-            var tcs = new TaskCompletionSource<IRestResponse>();
+            var request = GetRequest(args, method);
             client.ExecuteAsync(request, response =>
             {
                 if (response.ErrorException != null)
-                    tcs.TrySetException(response.ErrorException);
+                {
+                    if (OnError != null)
+                    {
+                        OnError(response);
+                    }
+                }
                 else
-                    tcs.TrySetResult(response);
+                {
+                    if (OnSuccess != null)
+                    {
+                        OnSuccess(response);
+                    }
+                }
             });
-
-            return tcs.Task;
         }
 
-        private RestRequest GetRequest(APIArgs args)
+        private RestRequest GetRequest(APIArgs args, Method method)
         {
-            var request = new RestRequest(String.Format("{0}/?{1}", API, Guid.NewGuid().ToString().Replace("-", "")), Method.POST);
-
-
+            var request = new RestRequest(API, method);
 
             foreach (String key in args.Headers.Keys)
             {
                 request.AddHeader(key, args.Headers[key].ToString());
             }
 
-            if (true)
+           string accesstoken = MainActivity.GetAccessToken();
+
+            if (accesstoken != null)
             {
-                request.AddParameter("accesstoken", "f3f82d07dad109d74a1229f8a79c49e7");
+                request.AddHeader("X-Accesstoken", accesstoken);
             }
+
+            request.AddParameter("key", Guid.NewGuid().ToString().Replace("-", ""), ParameterType.QueryString);
 
             foreach (String key in args.Parameters.Keys)
             {
-                request.AddParameter(key, args.Parameters[key]);
+                request.AddParameter(key, args.Parameters[key], ParameterType.GetOrPost);
+            }
+
+            foreach (String key in args.Files.Keys)
+            {
+                File file = new File(args.Files[key]);
+                byte[] data = new byte[(int)file.Length()];
+                try
+                {
+                    new FileInputStream(file).Read(data);
+                    request.AddFile(key, data, file.Name);
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine("Error: " + e.Message + " | " + e.StackTrace);
+                }
+
             }
 
             return request;

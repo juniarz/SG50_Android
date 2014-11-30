@@ -2,29 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.IO;
 using Android.Media;
 using RestSharp;
+using Java.Net;
+using Android.Views;
+using Android.Widget;
+using Android.App;
+using Android.Content;
+using Android.Graphics;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace SG50
 {
-    class CustomFeedsAdapter : BaseAdapter<JObject>
+    class CustomFeedsAdapter : BaseAdapter<JToken>
     {
-
-        List<JObject> items;
+        List<JToken> items;
         Activity context;
+        Bitmap imageBitmap;
 
-
-        public CustomFeedsAdapter(Activity context, List<JObject> items)
+        public CustomFeedsAdapter(Activity context, List<JToken> items)
             : base()
         {
             this.context = context;
@@ -35,7 +35,7 @@ namespace SG50
         {
             return position;
         }
-        public override JObject this[int position]
+        public override JToken this[int position]
         {
             get { return items[position]; }
         }
@@ -45,69 +45,52 @@ namespace SG50
         }
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            MyViewHolder holder = null;
-            int likes;
-            View view = convertView; // re-use an existing view, if one is supplied
+            View view = context.LayoutInflater.Inflate(Resource.Layout.FeedsItem, null);
 
-            if (view != null)
+            TextView titleView = view.FindViewById<TextView>(Resource.Id.TV_TITLE);
+            TextView userView = view.FindViewById<TextView>(Resource.Id.TV_POSTED);
+            TextView likesView = view.FindViewById<TextView>(Resource.Id.TV_LIKES);
+            VideoView videoView = view.FindViewById<VideoView>(Resource.Id.VideoPlayer);
+            JToken feedData = items[position];
+
+
+            ImageView PlayBtn = view.FindViewById<ImageView>(Resource.Id.BTN_play);
+
+            videoView.Visibility = ViewStates.Gone;
+
+            PlayBtn.Click += (o, e) =>
             {
-                holder = view.Tag as MyViewHolder;
+                videoView.Visibility = ViewStates.Visible;
+                PlayBtn.Visibility = ViewStates.Gone;
 
-            }
-            if (holder == null)
+                MediaController mc = new MediaController(context);
+                videoView.SetMediaController(new MediaController(context));
+                mc.SetMediaPlayer(videoView);
+                videoView.Start();
+                mc.SetAnchorView(videoView);
+
+                videoView.Completion += delegate
+                {
+                    videoView.Visibility = ViewStates.Gone;
+                    PlayBtn.Visibility = ViewStates.Visible;
+                };
+            };
+
+            Button LikeBtn = view.FindViewById<Button>(Resource.Id.BTN_LIKE);
+            if (Convert.ToBoolean(feedData["liked"].ToString()) == true)
             {
-                holder = new MyViewHolder();
-                view = context.LayoutInflater.Inflate(Resource.Layout.FeedsItem, null);
-                holder.Title = view.FindViewById<TextView>(Resource.Id.TV_TITLE);
-                holder.User = view.FindViewById<TextView>(Resource.Id.TV_POSTED);
-                holder.Likes = view.FindViewById<TextView>(Resource.Id.TV_LIKES);
-                holder.Video = view.FindViewById<VideoView>(Resource.Id.VideoView1);
-                view.Tag = holder;
-            }
-            holder.Title.Text = items[position]["title"].ToString();
-            holder.User.Text = "Uploaded by: " + items[position]["user"].ToString();
-            likes = int.Parse(items[position]["likes"].ToString());
-            holder.Likes.Text = likes.ToString() + " Likes";
-            var uri = Android.Net.Uri.Parse(items[position]["video"]["url"].ToString());
-            holder.Video.SetVideoURI(uri);
-
-            /* VideoView videoView = view.FindViewById<VideoView>(Resource.Id.VideoView1);
-             view.FindViewById<TextView>(Resource.Id.TV_TITLE).Text = items[position]["title"].ToString();
-             view.FindViewById<TextView>(Resource.Id.TV_POSTED).Text = items[position]["user"].ToString();
-             view.FindViewById<TextView>(Resource.Id.TV_LIKES).Text = items[position]["likes"].ToString() + " Likes";
-             Console.WriteLine(items[position]["video"]["url"].ToString());
-             var uri = Android.Net.Uri.Parse(items[position]["video"]["url"].ToString());
-             videoView.SetVideoURI(uri);*/
-
-            Button btn = view.FindViewById<Button>(Resource.Id.button1);
-            var liked = items[position]["liked"].ToString();
-            Button LikeVideo = view.FindViewById<Button>(Resource.Id.BTN_LIKE);
-            if (Convert.ToBoolean(liked) == true)
-            {
-                LikeVideo.SetTextColor(Android.Graphics.Color.Red);
-                
+                LikeBtn.SetTextColor(Android.Graphics.Color.WhiteSmoke);
             }
             else
             {
-                LikeVideo.SetTextColor(Android.Graphics.Color.DarkGray);
+                LikeBtn.SetTextColor(Android.Graphics.Color.DarkGray);
             }
-            Button FlagVideo = view.FindViewById<Button>(Resource.Id.BTN_FLAG);
-            btn.Click += (o, e) =>
-            {
-                btn.Visibility = ViewStates.Gone;
-                holder.Video.Start();
-                MediaController mc = new MediaController(context);
-                mc.SetAnchorView(holder.Video);
-                mc.SetMinimumWidth(holder.Video.Width);
-                mc.RequestFocus();
 
-            };
-            LikeVideo.Click += (o, e) =>
+            LikeBtn.Click += (o, e) =>
             {
-                
-                if (Convert.ToBoolean(liked))
+                if (Convert.ToBoolean(feedData["liked"].ToString()))
                 {
-                    APITask task = new APITask("feed/" + items[position]["present_id"] + "/unlike");
+                    APITask task = new APITask("feed/" + feedData["present_id"] + "/unlike");
                     APIArgs args = new APIArgs();
                     IRestResponse response = task.Call(args);
 
@@ -115,12 +98,10 @@ namespace SG50
                     {
                         context.RunOnUiThread(() =>
                         {
-                            LikeVideo.SetTextColor(Android.Graphics.Color.DarkGray);
-                            likes -= 1;
-                            holder.Likes.Text = likes.ToString() + " Likes";
-                            items[position]["liked"] = false;
-                            liked = items[position]["liked"].ToString();
-                            Console.WriteLine("Status:" +items[position]["liked"].ToString() + "Likes:"+items[position]["likes"].ToString());
+                            feedData["likes"] = int.Parse(feedData["likes"].ToString()) - 1;
+                            likesView.Text = int.Parse(feedData["likes"].ToString()) + " Likes";
+                            feedData["liked"] = false;
+                            LikeBtn.SetTextColor(Android.Graphics.Color.DarkGray);
                         });
                     }
                     else
@@ -130,7 +111,7 @@ namespace SG50
                 }
                 else
                 {
-                    APITask task = new APITask("feed/" + items[position]["present_id"] + "/like");
+                    APITask task = new APITask("feed/" + feedData["present_id"] + "/like");
                     APIArgs args = new APIArgs();
                     IRestResponse response = task.Call(args);
 
@@ -138,61 +119,70 @@ namespace SG50
                     {
                         context.RunOnUiThread(() =>
                         {
-                            LikeVideo.SetTextColor(Android.Graphics.Color.Red);
-                            likes += 1;
-                            holder.Likes.Text = likes.ToString() + " Likes";
-                            items[position]["liked"] = true;
-                            liked = items[position]["liked"].ToString();
-                            Console.WriteLine("Status:" +items[position]["liked"].ToString() + "Likes:"+items[position]["likes"].ToString());
+                            feedData["likes"] = int.Parse(feedData["likes"].ToString()) + 1;
+                            likesView.Text = int.Parse(feedData["likes"].ToString()) + " Likes";
+                            feedData["liked"] = true;
+                            LikeBtn.SetTextColor(Android.Graphics.Color.WhiteSmoke);
                         });
                     }
                     else
                     {
                         Console.WriteLine(response.ErrorException.Message);
-
                     }
                 }
-            }; 
+            };
 
-            FlagVideo.Click += (o, e) =>
+            ImageView FlagBtn = view.FindViewById<ImageView>(Resource.Id.BTN_FLAG);
+            FlagBtn.Click += (o, e) =>
             {
+                // Build the dialog.
                 Android.App.AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.SetPositiveButton("Yes", (EventHandler<DialogClickEventArgs>)null);
+                builder.SetNegativeButton("No", (EventHandler<DialogClickEventArgs>)null);
                 AlertDialog alertDialog = builder.Create();
-                alertDialog.SetTitle("Are you sure?");
-                alertDialog.SetIcon(Resource.Drawable.Icon);
                 alertDialog.SetMessage("Flag as inappropriate?");
+                alertDialog.SetTitle("Are you sure?");
 
-                //YES
-                alertDialog.SetButton("YES", (s, ev) =>
+                alertDialog.Show();
+
+                // Get the buttons.
+                var yesBtn = alertDialog.GetButton((int)DialogButtonType.Positive);
+                var noBtn = alertDialog.GetButton((int)DialogButtonType.Negative);
+
+                // Assign our handlers.
+                yesBtn.Click += (sender, ev) =>
                 {
-                    APITask task = new APITask("feed/" + items[position]["present_id"] + "/flag");
+                    // Don't dismiss dialog.
+                    APITask task = new APITask("feed/" + feedData["present_id"] + "/flag");
                     APIArgs args = new APIArgs();
                     IRestResponse response = task.Call(args);
 
                     if (response.ErrorException == null)
-                   { 
+                    {
                         context.RunOnUiThread(() =>
                         {
-                            Console.WriteLine("Flag:");
+                            Console.WriteLine("Flag:" + feedData["present_id"].ToString());
+                            alertDialog.Dismiss();
                         });
                     }
                     else
                     {
                         Console.WriteLine(response.ErrorException.Message);
                     }
-                });
-                
-                //NO
-                alertDialog.SetButton2("NO", (s, ev) =>
-                {
-                    alertDialog.Dispose();
-                });
+                };
 
-                alertDialog.Show();
+                noBtn.Click += (sender, ev) =>
+                {
+                    alertDialog.Dismiss();
+                };
             };
-            
+
+            titleView.Text = feedData["title"].ToString();
+            userView.Text = "Uploaded by: " + feedData["user"].ToString();
+            likesView.Text = int.Parse(feedData["likes"].ToString()) + " Likes";
+            videoView.SetVideoURI(Android.Net.Uri.Parse(feedData["video"]["url"].ToString()));
+
             return view;
         }
-
     }
 }

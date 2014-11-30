@@ -9,5 +9,6 @@ namespace SG50
 
         public Dictionary<String, Object> Headers = new Dictionary<String, Object>();
         public Dictionary<String, Object> Parameters = new Dictionary<String, Object>();
+        public Dictionary<String, String> Files = new Dictionary<String, String>();
     }
 }

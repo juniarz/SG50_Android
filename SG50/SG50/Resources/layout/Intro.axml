@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:background="@android:color/white">
+    <LinearLayout
+        android:orientation="vertical"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout1"
+        android:background="@drawable/bg"
+        android:layout_weight="1">
+        <ViewFlipper
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/ViewSwitcher">
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/FirstScreen"
+                android:background="@android:color/white"
+                android:padding="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:src="@drawable/logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/screen1"
+                    android:layout_marginBottom="0.0dp"
+                    android:layout_weight="1" />
+                <TextView
+                    android:text="Welcome to the SG50Youth Application, An initiative to celebrate Singapore's 50th birthday through celebration of youth on what they have done to make Singapore a better place"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/welcometext"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <ImageView
+                    android:src="@drawable/progress1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progress1"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/SecondScreen"
+                android:background="@android:color/white"
+                android:padding="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:src="@drawable/step1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/screen2"
+                    android:layout_marginBottom="0.0dp"
+                    android:layout_weight="1" />
+                <TextView
+                    android:text="The SG50 Logo allows you option to record a video or upload a video with the #SG50Youth to stand a chance to win in our SG50 Competition. Refer to http://www.SG50Youth.sg for more information"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/step1text"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <ImageView
+                    android:src="@drawable/progress2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progress2"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@drawable/step2"
+                android:background="@android:color/white"
+                android:padding="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:src="@drawable/step2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/screen3"
+                    android:layout_marginBottom="0.0dp"
+                    android:layout_weight="1" />
+                <TextView
+                    android:text="Besides contributing to this initiative, you can also watch videos other users have contributed. Don't forget to give a like using the heartshape if it impacts or entertains you. Report any inappropriate videos through the Black Flag icon."
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/step3text"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <ImageView
+                    android:src="@drawable/progress3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/progress3"
+                    android:layout_gravity="center" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:minWidth="25px"
+                android:minHeight="25px"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/FourthScreen"
+                android:background="@android:color/white"
+                android:padding="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp">
+                <ImageView
+                    android:src="@drawable/presenticon"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:id="@+id/screen4"
+                    android:layout_marginBottom="0.0dp"
+                    android:layout_weight="0" />
+                <TextView
+                    android:text="Powered By Present, The Social Video Diary"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/presenttext"
+                    android:textColor="@android:color/black"
+                    android:gravity="center" />
+                <Button
+                    android:text="Okay!"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:id="@+id/BTN_FINISH"
+                    android:gravity="center"
+                    android:background="@drawable/bg"
+                    android:textStyle="bold"
+                    android:textSize="24dp"
+                    android:textColor="@android:color/white" />
+                <ImageView
+                    android:src="@drawable/progress4"
+                    android:layout_width="match_parent"
+                    android:id="@+id/progress4"
+                    android:layout_gravity="center"
+                    android:background="@android:color/white"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </ViewFlipper>
+    </LinearLayout>
+</LinearLayout>

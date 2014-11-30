@@ -20,47 +20,49 @@ using Newtonsoft.Json.Linq;
 
 namespace SG50
 {
-    [Activity(Label = "SG50", MainLauncher = true)]
+    using System.Threading;
+
+    using Android.App;
+    using Android.OS;
+    using Android.Preferences;
+    [Activity(Label = "SG50", MainLauncher = true, NoHistory = true, Theme = "@android:style/Theme.Holo.Light")]
     public class MainActivity : Activity
     {
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+            SetContentView(Resource.Layout.splash);
+            ActionBar.Hide(); 
+            ISharedPreferences prefs = this.GetSharedPreferences("settings", FileCreationMode.Private);
+            Boolean showTutorial = prefs.GetBoolean("showTutorial", true);
 
-            // Set our view from the "main" layout resource
-            SetContentView(Resource.Layout.Main);
-
-            ListView listView = FindViewById<ListView>(Resource.Id.listView1);
-
-            APITask task = new APITask("feed");
-
-            APIArgs args = new APIArgs();
-            args.Parameters.Add("page", "0");
-            args.Parameters.Add("type", "test");
-
-            IRestResponse response = task.Call(args);
-             
-            if (response.ErrorException == null)
+            if (showTutorial)
             {
-                List<JObject> items = new List<JObject>();
-
-                Console.WriteLine("Res: " + response.Content);
-                var data = JObject.Parse(response.Content);
-
-                foreach (JObject obj in data.Values())
-                {
-                    items.Add(obj);
-                }
-                Console.WriteLine("Feeds Count: " + items.Count);
-
-                RunOnUiThread(() => {
-                    listView.Adapter = new CustomFeedsAdapter(this, items);
-                });
+                Intent intent = new Intent(this, typeof(Intro));
+                this.StartActivity(intent);
             }
             else
             {
-                Console.WriteLine(response.ErrorException.Message);
+                if (GetAccessToken() != null)
+                {
+                    Intent intent = new Intent(this, typeof(Feed));
+                    this.StartActivity(intent);
+                }
+                else
+                {
+                    Intent intent = new Intent(this, typeof(login));
+                    this.StartActivity(intent);
+                }
             }
+
+            this.Finish();
+        }
+
+
+        public static String GetAccessToken()
+        {
+            ISharedPreferences prefs = Application.Context.GetSharedPreferences("settings", FileCreationMode.Private);
+            return prefs.GetString("X-Accesstoken", null);
         }
     }
 }
